@@ -1,0 +1,67 @@
+# Byte-compiled / cached
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+.venv/
+env/
+.virtualenv/
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Django-related
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media/
+
+# Migrations (optional: keep if tracking migrations)
+*/migrations/__pycache__/
+*/migrations/*.pyc
+
+# Static and media files
+staticfiles/
+media/
+
+# Secret key and environment variables
+.env
+.env.local
+.env.production
+.env.*.local
+
+# IDE/editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# MacOS files
+.DS_Store
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+
+# pytest cache
+.pytest_cache/
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# Docker
+*.pid
+logs/
+docker-compose.override.yml
+
+# MySQL / PostgreSQL dumps
+*.sql
+*.sqlite3
