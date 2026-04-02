@@ -1,60 +1,40 @@
-# Zorvyn Assignment — Backend API
+# Zorvyn Assignment Backend
 
-Django REST Framework backend with role-based access control, financial records management, and dashboard analytics.
+Django REST API for role-based user management, financial records, and dashboard analytics.
 
----
-
-## Tech Stack
-- Python 3.12 / Django 6 / Django REST Framework
+## Stack
+- Python 3.12
+- Django 6
+- Django REST Framework
 - PostgreSQL
-- JWT Authentication (PyJWT)
-- Docker + GitHub Actions CI/CD
-
----
+- JWT (access + refresh)
+- Docker + GitHub Actions
 
 ## Roles
+- ADMIN: full access
+- ANALYST: view records with filters and dashboard
+- VIEWER: list records and dashboard
 
-| Role | Permissions |
-|---|---|
-| `ADMIN` | Full access — manage users, create/update/delete records |
-| `ANALYST` | View & filter records, dashboard |
-| `VIEWER` | List records (no filters), dashboard |
+## Authentication
+- Access token lifetime: 15 minutes
+- Refresh token lifetime: 7 days
+- Authorization header:
 
----
+```http
+Authorization: Bearer <access_token>
+```
 
-## Apps
-
-| App | Purpose |
-|---|---|
-| `accounts` | Register, login, JWT auth, role permissions |
-| `user_management` | Admin manages VIEWER & ANALYST users |
-| `financial_records` | CRUD for income/expense records |
-| `dashboard` | Summary, trends, category totals |
-
----
-
-## API Endpoints
+## API
 
 ### Auth
-```
-POST /api/auth/register/     # rate limited: 10/hour
-POST /api/auth/login/        # rate limited: 5/minute
-POST /api/auth/refresh/      # issue new access token using refresh token
-```
-
-Login returns:
-- `access_token` (15 minutes)
-- `refresh_token` (7 days)
-
-Refresh request body:
-```json
-{
-	"refresh_token": "<refresh_token>"
-}
+```text
+POST /api/auth/register/
+POST /api/auth/login/
+POST /api/auth/refresh/
 ```
 
-### User Management (ADMIN only)
-```
+### User Management (ADMIN)
+```text
 GET    /api/manage/users/
 POST   /api/manage/users/
 GET    /api/manage/users/<id>/
@@ -63,83 +43,100 @@ DELETE /api/manage/users/<id>/
 ```
 
 ### Financial Records
-```
-GET    /api/finance/records/              # all roles (VIEWER: no filters)
-POST   /api/finance/records/             # ADMIN only
-GET    /api/finance/records/<id>/        # ANALYST, ADMIN
-PATCH  /api/finance/records/<id>/        # ADMIN only
-DELETE /api/finance/records/<id>/        # ADMIN only (soft delete)
-```
-
-**Filters** (ANALYST & ADMIN): `?type=INCOME&category=SALARY&date_from=2026-01-01&date_to=2026-04-01&search=<notes>`  
-**Pagination**: `?page=1&page_size=10` (default 10, max 100)
-
-### Dashboard (all roles)
-```
-GET /api/dashboard/summary/   # totals, category breakdown, trends, recent activity
+```text
+GET    /api/finance/records/
+POST   /api/finance/records/
+GET    /api/finance/records/<id>/
+PATCH  /api/finance/records/<id>/
+DELETE /api/finance/records/<id>/
 ```
 
-### API Documentation
-```
-GET /api/schema/   # OpenAPI schema
-GET /api/docs/     # Swagger UI
+Filters for ANALYST and ADMIN:
+- `type`
+- `category`
+- `date`
+- `date_from`
+- `date_to`
+- `search`
+- `page`
+- `page_size`
+
+### Dashboard
+```text
+GET /api/dashboard/summary/
 ```
 
----
+### API Docs
+```text
+GET /api/schema/
+GET /api/docs/
+```
 
-## Setup
+## Run With Docker Compose
 
 ```bash
-# 1. Clone & create virtualenv
-python -m venv .venv && source .venv/bin/activate
+docker compose up -d --build
+```
 
-# 2. Install dependencies
+Services:
+- API: http://localhost:8000
+- Postgres: localhost:5432
+
+Compose startup runs:
+- `python manage.py migrate`
+- `python manage.py collectstatic --noinput`
+- Gunicorn
+
+## Admin
+
+Create superuser:
+
+```bash
+docker compose exec web python manage.py createsuperuser
+```
+
+Admin URL:
+- http://localhost:8000/admin/
+
+## Local Development (without Docker)
+
+```bash
+python -m venv .venv
 pip install -r requirements.txt
-
-# 3. Create .env file
-SECRET_KEY=your-secret-key
-DEBUG=True
-DATABASE_URL=postgresql://user:password@host/dbname
-ALLOWED_HOSTS=localhost,127.0.0.1
-CORS_ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
-DJANGO_LOG_LEVEL=WARNING
-JWT_ACCESS_TOKEN_LIFETIME_MINUTES=15
-JWT_REFRESH_TOKEN_LIFETIME_DAYS=7
-
-# 4. Migrate & run
 python manage.py migrate
-gunicorn zorvyn_assignment.wsgi:application --bind 0.0.0.0:8000 --workers 3
+python manage.py runserver
 ```
 
-## Run Tests
+Required environment variables:
+- `SECRET_KEY`
+- `DATABASE_URL`
+- `DEBUG`
+
+Optional:
+- `ALLOWED_HOSTS`
+- `CORS_ALLOWED_ORIGINS`
+- `DJANGO_LOG_LEVEL`
+- `JWT_ACCESS_TOKEN_LIFETIME_MINUTES`
+- `JWT_REFRESH_TOKEN_LIFETIME_DAYS`
+
+## Tests
+
 ```bash
-python manage.py test accounts financial_records --keepdb
+docker compose exec web python manage.py test accounts financial_records user_management dashboard
 ```
-
-## Docker
-```bash
-docker build -t zorvyn-assignment-be .
-docker run -p 8000:8000 --env-file .env zorvyn-assignment-be
-```
-
-## Docker Compose (Recommended for Local Run)
-```bash
-docker compose up --build
-```
-
-This starts:
-- API at `http://localhost:8000`
-- Postgres at `localhost:5432`
-
-Note: compose startup runs migrations and `collectstatic` automatically, so Django admin CSS/JS loads correctly in containerized mode.
-
----
 
 ## CI/CD
 
-GitHub Actions (`.github/workflows/deploy.yml`) — on push to `main`:
-1. Runs all tests
-2. Builds Docker image
-3. Pushes to Docker Hub as `zorvyn-assignment-be:latest`
+Workflow file: `.github/workflows/deploy.yml`
 
-**Required GitHub secrets:** `SECRET_KEY`, `DATABASE_URL`, `DOCKER_USERNAME`, `DOCKER_PASSWORD`
+Triggers:
+- push to `master`
+- pull request to `master`
+
+Behavior:
+- runs tests on push and pull request
+- builds and pushes Docker image on push only
+
+Required GitHub secrets for Docker publish:
+- `DOCKER_USERNAME`
+- `DOCKER_PASSWORD`
