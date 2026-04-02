@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zorvyn | Technical Project Overview</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0d1117;
+            --bg-soft: #121923;
+            --panel: rgba(18, 25, 35, 0.92);
+            --line: rgba(148, 163, 184, 0.18);
+            --line-strong: rgba(148, 163, 184, 0.32);
+            --text: #e5eef8;
+            --muted: #9fb1c5;
+            --accent: #23c4b8;
+            --highlight: #f2b84b;
+            --max-width: 1180px;
+            --shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(35, 196, 184, 0.14), transparent 30%),
+                radial-gradient(circle at top right, rgba(242, 184, 75, 0.12), transparent 22%),
+                linear-gradient(180deg, #091019 0%, var(--bg) 38%, #0d1117 100%);
+            color: var(--text);
+            line-height: 1.65;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .page-shell,
+        .nav-inner {
+            width: min(var(--max-width), calc(100% - 3rem));
+            margin: 0 auto;
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            backdrop-filter: blur(16px);
+            background: rgba(9, 16, 25, 0.82);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .nav-inner {
+            padding: 1rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .brand,
+        h1,
+        h2,
+        h3,
+        th,
+        .metric strong {
+            font-family: 'Manrope', sans-serif;
+        }
+
+        .brand {
+            font-size: 1.2rem;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+        }
+
+        .brand span {
+            color: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--text);
+        }
+
+        .nav-cta,
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+        }
+
+        .nav-cta {
+            padding: 0.7rem 1.1rem;
+            background: var(--accent);
+            color: #081118;
+            border-radius: 999px;
+        }
+
+        .nav-cta:hover,
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        header {
+            padding: 5.5rem 0 3rem;
+        }
+
+        .eyebrow {
+            display: inline-block;
+            margin-bottom: 1.4rem;
+            padding: 0.42rem 0.85rem;
+            border-radius: 999px;
+            border: 1px solid rgba(35, 196, 184, 0.24);
+            background: rgba(35, 196, 184, 0.1);
+            color: #a8efe8;
+            font-size: 0.84rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .hero-grid,
+        .cards,
+        .split {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .hero-grid {
+            grid-template-columns: 1.3fr 0.9fr;
+            gap: 2rem;
+            align-items: end;
+        }
+
+        h1 {
+            font-size: clamp(3rem, 7vw, 5.3rem);
+            line-height: 0.97;
+            letter-spacing: -0.06em;
+            max-width: 12ch;
+            margin-bottom: 1.4rem;
+        }
+
+        .hero-copy p,
+        .section-intro p,
+        .card p,
+        .wide-panel p,
+        .wide-panel li,
+        th,
+        td,
+        footer {
+            color: var(--muted);
+        }
+
+        .hero-copy p {
+            max-width: 62ch;
+            font-size: 1.08rem;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            min-height: 48px;
+            padding: 0.85rem 1.25rem;
+            border-radius: 14px;
+            border: 1px solid transparent;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #071018;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border-color: var(--line-strong);
+            color: var(--text);
+        }
+
+        .hero-card,
+        .card,
+        .wide-panel,
+        .table-panel {
+            background: rgba(18, 25, 35, 0.92);
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .hero-card {
+            padding: 1.8rem;
+        }
+
+        .hero-card h2 {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            color: #cad9e8;
+        }
+
+        .metric {
+            padding: 1rem 0;
+            border-top: 1px solid var(--line);
+        }
+
+        .metric:first-child,
+        .stack-list li:first-child,
+        .detail-list li:first-child {
+            border-top: none;
+            padding-top: 0;
+        }
+
+        .metric strong {
+            display: block;
+            font-size: 1.65rem;
+            letter-spacing: -0.04em;
+        }
+
+        main {
+            padding-bottom: 4rem;
+        }
+
+        section {
+            margin-top: 1.8rem;
+        }
+
+        .section-intro {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            letter-spacing: -0.04em;
+        }
+
+        .section-intro p {
+            max-width: 48ch;
+        }
+
+        .cards {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .card,
+        .wide-panel {
+            padding: 1.5rem;
+        }
+
+        h3 {
+            font-size: 1.08rem;
+            margin-bottom: 0.7rem;
+        }
+
+        .highlight-line {
+            display: inline-block;
+            margin-bottom: 0.8rem;
+            color: var(--highlight);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .split {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .stack-list,
+        .detail-list {
+            list-style: none;
+            display: grid;
+            gap: 0.8rem;
+        }
+
+        .stack-list li,
+        .detail-list li {
+            padding: 0.9rem 0;
+            border-top: 1px solid var(--line);
+        }
+
+        .stack-list strong,
+        .detail-list strong,
+        td strong {
+            display: block;
+            color: var(--text);
+            margin-bottom: 0.2rem;
+        }
+
+        .table-panel {
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 1rem 1.2rem;
+            border-bottom: 1px solid var(--line);
+            vertical-align: top;
+            font-size: 0.96rem;
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text);
+            font-size: 0.92rem;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .callout {
+            border-left: 3px solid var(--accent);
+            padding-left: 1rem;
+            color: var(--text);
+        }
+
+        footer {
+            padding: 2rem 0 3rem;
+            font-size: 0.92rem;
+        }
+
+        @media (max-width: 980px) {
+            .hero-grid,
+            .cards,
+            .split {
+                grid-template-columns: 1fr;
+            }
+
+            .section-intro {
+                align-items: start;
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .page-shell,
+            .nav-inner {
+                width: min(100% - 1.4rem, var(--max-width));
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            header {
+                padding-top: 4rem;
+            }
+
+            h1 {
+                max-width: none;
+            }
+
+            th,
+            td {
+                padding: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-inner">
+            <a href="#top" class="brand">Zor<span>vyn</span></a>
+            <div class="nav-links">
+                <a href="#overview">Overview</a>
+                <a href="#stack">Technology</a>
+                <a href="#difference">Differentiation</a>
+                <a href="#production">Production Readiness</a>
+                <a href="#api">API Scope</a>
+            </div>
+            <a href="#production" class="nav-cta">Technical Summary</a>
+        </div>
+    </nav>
+
+    <div class="page-shell" id="top">
+        <header>
+            <div class="eyebrow">Technical Project Documentation</div>
+            <div class="hero-grid">
+                <div class="hero-copy">
+                    <h1>Zorvyn Finance and Access Control Platform</h1>
+                    <p>
+                        Zorvyn is a backend-first financial operations platform designed for controlled user access,
+                        structured financial record management, and decision-ready dashboard analytics. The system is
+                        implemented as a Django REST API with production-oriented deployment, authentication, security
+                        controls, and automated delivery components.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="#stack" class="btn btn-primary">View Technology Stack</a>
+                        <a href="#difference" class="btn btn-secondary">View Differentiation</a>
+                    </div>
+                </div>
+                <aside class="hero-card">
+                    <h2>Implementation Snapshot</h2>
+                    <div class="metric">
+                        <strong>Django REST API</strong>
+                        <span>Role-aware backend architecture with documented endpoints and schema generation.</span>
+                    </div>
+                    <div class="metric">
+                        <strong>PostgreSQL Persistence</strong>
+                        <span>Relational storage for users, financial records, dashboard queries, and audit-friendly soft deletion.</span>
+                    </div>
+                    <div class="metric">
+                        <strong>Docker Deployment</strong>
+                        <span>Containerized runtime with Gunicorn, migrations, static asset collection, and CI-backed image delivery.</span>
+                    </div>
+                </aside>
+            </div>
+        </header>
+
+        <main>
+            <section id="overview">
+                <div class="section-intro">
+                    <h2>Project Overview</h2>
+                    <p>
+                        The platform is structured around four core capabilities: authentication, role-based user administration,
+                        financial record operations, and consolidated dashboard reporting.
+                    </p>
+                </div>
+                <div class="cards">
+                    <article class="card">
+                        <span class="highlight-line">Module 01</span>
+                        <h3>Authentication and Identity</h3>
+                        <p>
+                            Supports user registration, login, and access-token refresh using a custom JWT implementation.
+                            Token lifetimes are configurable through environment variables, allowing separation between
+                            development and production security policies.
+                        </p>
+                    </article>
+                    <article class="card">
+                        <span class="highlight-line">Module 02</span>
+                        <h3>Role-Based User Management</h3>
+                        <p>
+                            Uses explicit application roles for ADMIN, ANALYST, and VIEWER. Administrative endpoints
+                            control downstream user creation and role assignment to protect sensitive operations and
+                            reduce accidental privilege exposure.
+                        </p>
+                    </article>
+                    <article class="card">
+                        <span class="highlight-line">Module 03</span>
+                        <h3>Financial Data Operations</h3>
+                        <p>
+                            Provides CRUD flows for financial records, filtering by type, category, date, and text search,
+                            plus pagination for consistent response handling on larger datasets.
+                        </p>
+                    </article>
+                </div>
+            </section>
+
+            <section>
+                <div class="split">
+                    <article class="wide-panel">
+                        <h3>Functional Scope</h3>
+                        <ul class="detail-list">
+                            <li><strong>User registration and secure login</strong>Issue access and refresh tokens for authenticated sessions.</li>
+                            <li><strong>Controlled account administration</strong>Allow administrators to manage analyst and viewer accounts through protected endpoints.</li>
+                            <li><strong>Financial record lifecycle</strong>Create, update, query, and soft-delete income and expense records using structured categories.</li>
+                            <li><strong>Dashboard analytics</strong>Expose summary totals, category breakdowns, recent activity, and time-based weekly and monthly trends.</li>
+                        </ul>
+                    </article>
+                    <article class="wide-panel">
+                        <h3>Business Value</h3>
+                        <p class="callout">
+                            The project combines operational control and financial visibility in one service. Instead of
+                            treating user access, ledger handling, and reporting as disconnected layers, Zorvyn keeps
+                            them within a single permission-aware API boundary.
+                        </p>
+                    </article>
+                </div>
+            </section>
+
+            <section id="stack">
+                <div class="section-intro">
+                    <h2>Technology Stack</h2>
+                    <p>
+                        The implementation uses widely adopted technologies that are mature, maintainable, and suitable
+                        for containerized backend deployment.
+                    </p>
+                </div>
+                <div class="split">
+                    <article class="wide-panel">
+                        <h3>Core Technologies Used</h3>
+                        <ul class="stack-list">
+                            <li><strong>Python 3.12</strong>Primary application language for backend services and business logic.</li>
+                            <li><strong>Django 6</strong>Application framework for models, settings, middleware, admin, and deployment configuration.</li>
+                            <li><strong>Django REST Framework</strong>API layer for serializers, views, request handling, permissions, throttling, and pagination.</li>
+                            <li><strong>PostgreSQL 16</strong>Relational database engine used in Docker Compose and CI service configuration.</li>
+                            <li><strong>PyJWT</strong>Token generation and verification for custom access and refresh authentication flows.</li>
+                        </ul>
+                    </article>
+                    <article class="wide-panel">
+                        <h3>Supporting Production Components</h3>
+                        <ul class="stack-list">
+                            <li><strong>drf-spectacular</strong>Automatic OpenAPI schema generation and interactive API documentation endpoints.</li>
+                            <li><strong>WhiteNoise</strong>Static asset serving with compressed manifest storage for efficient production delivery.</li>
+                            <li><strong>django-cors-headers</strong>Cross-origin configuration support for frontend-to-API integration.</li>
+                            <li><strong>Gunicorn</strong>Production-grade WSGI server used in the container runtime command.</li>
+                            <li><strong>Docker and Docker Compose</strong>Standardized packaging and multi-service orchestration for the API and database.</li>
+                        </ul>
+                    </article>
+                </div>
+            </section>
+
+            <section id="difference">
+                <div class="section-intro">
+                    <h2>Differentiating Factors</h2>
+                    <p>
+                        The platform does not compete on visual presentation alone. Its value comes from disciplined
+                        backend behavior, access governance, and practical reporting design.
+                    </p>
+                </div>
+                <div class="cards">
+                    <article class="card">
+                        <h3>Permission-Aware Architecture</h3>
+                        <p>
+                            Every major area is aligned to business roles. Administrative actions, analytical access,
+                            and read-only visibility are separated clearly, reducing the chance of privilege leakage.
+                        </p>
+                    </article>
+                    <article class="card">
+                        <h3>Operational Analytics in the Same API</h3>
+                        <p>
+                            Summary totals, category-level aggregations, recent activity, and trend reporting are already
+                            integrated. Many comparable student systems stop at CRUD; this one includes decision-oriented output.
+                        </p>
+                    </article>
+                    <article class="card">
+                        <h3>Safer Data Lifecycle</h3>
+                        <p>
+                            Financial records use soft deletion instead of destructive removal. That design supports
+                            auditability, operational recovery, and safer downstream reporting behavior.
+                        </p>
+                    </article>
+                </div>
+            </section>
+
+            <section id="production">
+                <div class="section-intro">
+                    <h2>Production Readiness</h2>
+                    <p>
+                        The project includes concrete implementation choices that move it beyond a local prototype and
+                        make it suitable for controlled deployment environments.
+                    </p>
+                </div>
+                <div class="table-panel">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Area</th>
+                                <th>Production-Oriented Implementation</th>
+                                <th>Why It Matters</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Deployment</strong></td>
+                                <td>Dockerfile, Docker Compose, PostgreSQL service, Gunicorn startup, migration and static collection on boot.</td>
+                                <td>Creates a repeatable runtime with fewer environment-specific failures.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Security</strong></td>
+                                <td>JWT authentication, password validation, configurable secret key, allowed hosts, role-based authorization, and request throttling.</td>
+                                <td>Protects identity, limits abuse, and constrains access to sensitive operations.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Documentation</strong></td>
+                                <td>OpenAPI schema endpoint and Swagger documentation endpoint.</td>
+                                <td>Improves onboarding, integration speed, and API governance.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Data Handling</strong></td>
+                                <td>Soft delete support, indexed fields, filtered queries, paginated responses, and category-based domain structure.</td>
+                                <td>Supports safer data retention and more scalable read patterns.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Validation and Delivery</strong></td>
+                                <td>Automated tests, GitHub Actions workflow, container image build, and registry push on protected branch events.</td>
+                                <td>Reduces regression risk and supports continuous delivery practices.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="api">
+                <div class="section-intro">
+                    <h2>API Surface</h2>
+                    <p>
+                        The API is organized by domain so that authentication, administration, financial operations, and
+                        analytics remain modular and easy to integrate.
+                    </p>
+                </div>
+                <div class="split">
+                    <article class="wide-panel">
+                        <h3>Primary Endpoints</h3>
+                        <ul class="detail-list">
+                            <li><strong>Authentication</strong>/api/auth/register/, /api/auth/login/, /api/auth/refresh/</li>
+                            <li><strong>User Management</strong>/api/manage/users/, /api/manage/users/&lt;uuid&gt;/</li>
+                            <li><strong>Financial Records</strong>/api/finance/records/, /api/finance/records/&lt;uuid&gt;/</li>
+                            <li><strong>Dashboard Analytics</strong>/api/dashboard/summary/</li>
+                            <li><strong>Documentation and Health</strong>/api/schema/, /api/docs/, /health/</li>
+                        </ul>
+                    </article>
+                    <article class="wide-panel">
+                        <h3>Project Summary</h3>
+                        <p>
+                            Zorvyn is production-conscious because it combines role-aware access control, explicit domain
+                            boundaries, analytics-ready data handling, containerized deployment, API documentation, and CI-backed testing.
+                            It is differentiated by integrating administration, financial records, and dashboard reporting into a single,
+                            secure backend service rather than presenting isolated features without operational cohesion.
+                        </p>
+                    </article>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            Zorvyn Assignment Documentation. Professional technical summary for architecture review, project submission, and stakeholder communication.
+        </footer>
+    </div>
+</body>
+</html>
