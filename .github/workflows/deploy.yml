@@ -2,9 +2,9 @@ name: Build & Push Docker Image
 
 on:
   push:
-    branches: [main]
+    branches: [master]
   pull_request:
-    branches: [main]
+    branches: [master]
 
 jobs:
   docker:
@@ -32,13 +32,16 @@ jobs:
         run: python manage.py test accounts financial_records --keepdb
 
       - name: Log in to DockerHub
+        if: github.event_name == 'push'
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker image
+        if: github.event_name == 'push'
         run: docker build -t ${{ secrets.DOCKER_USERNAME }}/zorvyn-assignment-be:latest .
 
       - name: Push Docker image
+        if: github.event_name == 'push'
         run: docker push ${{ secrets.DOCKER_USERNAME }}/zorvyn-assignment-be:latest
