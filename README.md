@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-Zorvyn is a production-oriented Django REST API built for financial record management, role-based user administration, and dashboard analytics. The platform centralizes authentication, access control, operational data handling, and reporting into one service boundary. It is designed for environments where different users require different levels of visibility and authority.
+Reference documentation: https://harshit1o.github.io/Zorvyn_assignment/
 
 This project is more than a basic CRUD implementation. It includes custom JWT authentication, role-aware permissions, filtered and paginated record access, soft deletion for safer data lifecycle management, analytics endpoints, containerized deployment, API documentation, and CI-backed validation.
 
