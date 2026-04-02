@@ -9,6 +9,20 @@ on:
 jobs:
   docker:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: zorvyn_assignment
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d zorvyn_assignment"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - name: Checkout code
@@ -26,8 +40,8 @@ jobs:
 
       - name: Run tests
         env:
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          SECRET_KEY: ci-only-secret-key-at-least-32-chars
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/zorvyn_assignment
           DEBUG: "False"
         run: python manage.py test accounts financial_records --keepdb
 

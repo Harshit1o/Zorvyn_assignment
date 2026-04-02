@@ -2,7 +2,7 @@ services:
   db:
     image: postgres:16-alpine
     container_name: zorvyn_db
-    restart: unless-stopped
+    restart: always
     environment:
       POSTGRES_DB: zorvyn_assignment
       POSTGRES_USER: postgres
@@ -22,12 +22,12 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: zorvyn_web
-    restart: unless-stopped
+    restart: always
     depends_on:
       db:
         condition: service_healthy
     environment:
-      SECRET_KEY: ${SECRET_KEY:-dev-only-change-me}
+      SECRET_KEY: ${SECRET_KEY:-dev-only-change-me-at-least-32-characters-long}
       DATABASE_URL: ${DATABASE_URL:-postgresql://postgres:postgres@db:5432/zorvyn_assignment}
       DEBUG: ${DEBUG:-False}
       ALLOWED_HOSTS: ${ALLOWED_HOSTS:-localhost,127.0.0.1}
@@ -37,6 +37,8 @@ services:
       DJANGO_LOG_LEVEL: ${DJANGO_LOG_LEVEL:-WARNING}
     ports:
       - "8000:8000"
+    volumes:
+      - ./:/app
     command: >
           sh -c "python manage.py migrate &&
             python manage.py collectstatic --noinput &&

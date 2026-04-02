@@ -86,6 +86,10 @@ class TokenAuthentication(BaseAuthentication):
         }
 
     @classmethod
+    def generate_token(cls, payload):
+        return cls.generate_access_token(payload)
+
+    @classmethod
     def refresh_access_token(cls, refresh_token):
         try:
             payload = jwt.decode(refresh_token, key=settings.SECRET_KEY, algorithms=["HS256"])
